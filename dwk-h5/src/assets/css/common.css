@@ -1,0 +1,107 @@
+*{margin: 0;padding:0}
+h1 {
+    font-size: 20px;
+}
+h1 span {font-size: 22px;color: #0307f3;}
+.title p {font-size: 12px;color:#828282;}
+.row {padding-left: 10px;padding-right: 10px;}
+.subtitle {
+    font-size:14px;
+    height: 40px;
+    line-height: 40px;
+    font-weight: 900;
+    padding-left: 10px;
+}
+.subtitle span{font-size: 12px;font-weight: normal;}
+.intro-msg {font-size: 10px;width: calc(100% - 20px);text-align: center;margin-left: auto;margin-right: auto;margin-top: 20px;color:#828282;}
+.m-t {margin-top: 10px;}
+.m-2t {margin-top: 20px;}
+.m-b {margin-bottom: 10px;}
+.m-2b {margin-bottom: 20px;}
+
+.progress {
+    width: calc(100% - 40px);
+    margin-left: auto;
+    margin-right: auto;
+}
+.contract {
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: 20px;
+    font-size: 12px;
+}
+.text-blue {color: rgba(60, 87, 240, 0.918);}
+
+.mobile-modal {
+    width: 70vw;
+    min-height: 80vw;
+    border-radius: 5px;
+    position: relative;
+}
+.close-icon {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+}
+.mobile-title {
+    font-size: 15px;
+    font-weight: 900;
+    text-align: center;
+    line-height: 40px;
+}
+.mobile-box {
+    padding-left: 20px;
+    padding-right: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 13px;
+}
+.mobile-item {
+    line-height: 40px;   
+}
+.change-mobiles {text-align: center; line-height: 40px;font-size: 13px;color: #0307f3;}
+
+.success {
+    padding-top: 20px;
+    text-align: center;
+}
+.success .msg {
+    font-weight: 900;
+    font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+.success .intro {
+    line-height: 1.8em;
+    font-size: 12px;
+    color: #808080;
+}
+
+.contact-box {
+    font-size: 13px;
+    color: #666;
+    width: 80vw;
+    height: 100vw;
+}
+.contact {
+    height: calc(100vw - 44px);
+    overflow-y: scroll;
+    padding: 10px;
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
+}
+.contact-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+}
+.contact-foot button {
+    width: 50%;
+    height: 44px;
+    border: none;
+    background: #fff;
+}
+.contact-foot .agree {background: #0307f3;color: #fff;}
