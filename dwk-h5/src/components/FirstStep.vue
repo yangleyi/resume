@@ -38,7 +38,7 @@
             readonly
             clickable
             name="area"
-            :value="area"
+            :value="province"
             label="收货地址"
             placeholder="请选择地区"
             @click="showArea = true"
@@ -52,9 +52,18 @@
         />
     </van-cell-group>
     <van-popup v-model="showArea" position="bottom">
-        <van-area
+        <!-- <van-area
             :area-list="areaList"
             @confirm="onConfirm"
+            @cancel="showArea = false"
+        /> -->
+        <van-picker
+            ref="picker"
+            show-toolbar
+            value-key="name"
+            title="标题"
+            :columns="areaList" 
+            @confirm="areaConfirm"
             @cancel="showArea = false"
         />
     </van-popup>
@@ -68,6 +77,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: 'FirstStep',
   data: function () {
@@ -84,43 +94,48 @@ export default {
       address: "",
       addressError: "",
       showArea: false,
-      areaList: {
-        province_list: {
-          110000: '北京市',
-          120000: '天津市'
-        },
-        city_list: {
-          110100: '北京市',
-          110200: '县',
-          120100: '天津市',
-          120200: '县'
-        },
-        county_list: {
-          110101: '东城区',
-          110102: '西城区',
-          110105: '朝阳区',
-          110106: '丰台区',
-          120101: '和平区',
-          120102: '河东区',
-          120103: '河西区',
-          120104: '南开区',
-          120105: '河北区',
-        }
-      }
+
+      province: "", // 省
+      city: "", // 市
+      area: "", // 区
+
+      areaList: [],
     }
   },
+  mounted () {
+      axios
+        .get('/getArea')
+        .then(res => {
+            let proData = res.data.data
+            proData.forEach(pro => {
+                pro.children = pro.childlist
+                pro.childlist.forEach(city => {
+                    city.children = city.childlist
+                })
+            })
+            this.areaList = proData
+            console.log(this.$data)
+        }).catch(err => {
+            console.log('XXX', err)
+        })
+  },
   methods: {
+      areaConfirm (e) {
+          this.showArea = false
+          let a = this.$refs.picker.getColumnValues()
+          console.log('area', e, a)
+      },
     onConfirm (e) {
       console.log('onconfirm', e)
       this.showArea = false
-      this.area = e[0].name
+      this.province = e[0].name
     },
     next () {
         let data = {
             name: this.name,
             card: this.idCard,
             mobile: this.mobile,
-            area: this.area,
+            province: this.province,
             address: this.address
         }
         if (!this.name) {
@@ -142,7 +157,7 @@ export default {
                 this.mobileError = '请输入正确的手机号码'
             }
         }
-        if (!this.area) {
+        if (!this.province) {
             this.areaError = '请选择您的配送范围'
         } else {
             this.areaError = ''
@@ -152,7 +167,7 @@ export default {
         } else {
             this.addressError = ''
         }
-        if (!this.name || !this.idCard || !this.mobile || !this.area || !this.address || /^1[3456789]\d{9}$/.test(this.mobile) == false || !this.area || !this.address) return
+        if (!this.name || !this.idCard || !this.mobile || !this.province || !this.address || /^1[3456789]\d{9}$/.test(this.mobile) == false || !this.province || !this.address) return
         this.$emit('next', data)
     },
     blur (e) {

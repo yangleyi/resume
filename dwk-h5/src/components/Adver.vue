@@ -2,6 +2,7 @@
     <div class="ad-page">
         <div class="ad">
             <img src="./../assets/telstar1.png" />
+            <split-modal />
             <img src="./../assets/telstar2.png" />
         </div>
         <div class="ad-btn">
@@ -12,10 +13,12 @@
 
 <script>
 import {debounce} from "./../utils/common.js";
+import SplitModal from "./../components/SplitModal"
 export default {
     data: () => ({
         // showAd: true
     }),
+    components: {SplitModal},
     mounted () {
         window.addEventListener('scroll', this.scroll, true)
     },
