@@ -1,0 +1,202 @@
+*{margin: 0;padding:0;}
+.img-box img {width: 100%;vertical-align: middle;}
+.table {
+    width: 100%;
+    box-sizing: border-box;
+    color: #333;
+    background: url(./../assets/5g24_4.png) no-repeat;
+    background-size: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.project {
+    width: 100%;
+    box-sizing: border-box;
+    background: url(./../assets/5g24_4.png);
+    background-size: 100%;
+    padding: 0 10px;
+}
+.project-list {
+    min-height: 100px;
+    box-sizing: border-box;
+    padding-bottom: 20px;
+}
+.project-item {
+    width: 100%;
+    background: #E8D0A4;
+    color: #333;
+    font-size: 12px;
+    margin-top: 10px;
+    position: relative;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.project-item>img {
+    width:40px;
+    position: absolute;
+    right: 0;
+    top:0;
+}
+.project-item>div {
+    display: flex;
+    align-items: center;
+    padding: 7px 0;
+}
+.project-item>div p:first-child {width: 65%;}
+.project-item .title {font-size: 14px;font-weight: bold;}
+.project-item .price {font-weight: bold;}
+.price i {
+    font-size: 14px;
+    color: #902400;
+}
+.project>img {width: 100%;vertical-align: middle;}
+.mobile {
+    padding: 20px 0;
+    width: 90%;
+    margin: 0 auto;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+} 
+.mobile>.mobile-input {
+    width: 100%;
+    height: 35px;
+    line-height: 35px;
+    border: 1px solid #E8D0A4;
+    border-radius: 30px;
+    background: none;
+    outline: none;
+    padding: 0 10px;
+    color: #fff;
+    font-size: 15px;
+}
+.mobile-input::-webkit-input-placeholder {
+    color: #E8D0A4;
+}
+.table>img {width: 50%;}
+.foot {background: #000;height: 60px;}
+.active {
+    box-shadow: 0 0 1px 3px #fff;
+}
+.footer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    position: fixed;
+    bottom: 30px;
+    z-index: 10;
+}
+.footer>img {
+    width: 90%;
+}
+
+.modal-box {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 120;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.modal {
+    width: 85%;
+    /* height: 280px; */
+    background: #fff;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+}
+.modal-cont {padding-left: 10px;padding-right: 10px;}
+.intro {
+    text-align: left;
+    font-size: 12px;
+    padding: 15px 0;
+}
+.modal .title {
+    text-align: center;
+    padding: 10px 0;
+}
+.modal .subtitle {
+    text-align: center;
+    padding: 10px 0;
+}
+.input {
+    width: 100%;
+    height: 50px;
+    background: #F0EDF1;
+    line-height: 50px;
+    padding: 5px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 5px;
+}
+.input input {
+    width: 65%;
+    height: 100%;
+    border: none;
+    background: none;
+    outline: none;
+}
+.input button {
+    width: 35%;
+    height: 100%;
+    color: #333;
+    border: none;
+    outline: none;
+    background: #E8D0A4;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.modal-foot {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+}
+.modal-foot div {
+    width: 50%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    background: #F1EFF0;
+    color: #E8D0A4;
+}
+.modal-foot .confirm {
+    background: #E8D0A4;
+    color: #333;
+}
+.van-toast {
+    width: auto;
+    max-width: 100px;
+}
+
+.contact-box {
+    max-height: 360px;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    font-size: 14px;
+    padding: 10px;
+}
+
+.color-main {
+    color: #E8D0A4
+}
