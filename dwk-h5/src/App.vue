@@ -10,8 +10,15 @@
 export default {
   name: 'App',
   data: () => ({
-    transitionName: 'slide-left'
+    transitionName: 'slide-left',
+    uuid: null
   }),
+  mounted() {
+    this.uuid =  'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+    })
+  },
   watch: {
     $route(to, from) {
       if (to.meta.index > from.meta.index) {

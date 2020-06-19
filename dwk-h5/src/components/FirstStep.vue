@@ -14,21 +14,21 @@
             :error-message="nameError"
         />
         <van-field
-            v-model="idCard"
+            v-model="idenNum"
             label="身份证"
             placeholder="请输入身份证号码"
-            data-name="idCard"
+            data-name="idenNum"
             @blur="blur"
             :error-message="idError"
         />
         <van-field
-            v-model="mobile"
+            v-model="phone"
             label="联系电话"
             placeholder="请输入收货联系电话"
             type="tel"
-            data-name="mobile"
+            data-name="phone"
             @blur="blur"
-            :error-message="mobileError"
+            :error-message="phoneError"
             maxlength="11"
         />
     </van-cell-group>
@@ -38,7 +38,7 @@
             readonly
             clickable
             name="area"
-            :value="province"
+            :value="showAreaText"
             label="收货地址"
             placeholder="请选择地区"
             @click="showArea = true"
@@ -83,11 +83,11 @@ export default {
   data: function () {
     return {
       name: "",
-      idCard: "",
-      mobile: "",
+      idenNum: "",
+      phone: "",
       nameError: "",
       idError: "",
-      mobileError: "",
+      phoneError: "",
 
       area: "",
       areaError: "",
@@ -100,6 +100,12 @@ export default {
       area: "", // 区
 
       areaList: [],
+      params: {
+        channel_code: "yk",
+        combo_id: 2697,
+        channel_id: 3110,
+        ad_id: 3110
+      }
     }
   },
   mounted () {
@@ -119,23 +125,34 @@ export default {
             console.log('XXX', err)
         })
   },
+  computed: {
+      showAreaText: function () {
+          if (!this.province) return ""
+          return this.province + ' ' + this.city + ' ' + this.area
+      }
+  },
   methods: {
       areaConfirm (e) {
           this.showArea = false
           let a = this.$refs.picker.getColumnValues()
           console.log('area', e, a)
+          this.province = e[0]
+          this.city = e[1]
+          this.area = e[2]
       },
-    onConfirm (e) {
-      console.log('onconfirm', e)
-      this.showArea = false
-      this.province = e[0].name
-    },
+    // onConfirm (e) {
+    //   console.log('onconfirm', e)
+    //   this.showArea = false
+    //   this.province = e[0].name
+    // },
     next () {
         let data = {
             name: this.name,
-            card: this.idCard,
-            mobile: this.mobile,
+            idenNum: this.idenNum,
+            phone: this.phone,
             province: this.province,
+            city: this.city,
+            area: this.area,
             address: this.address
         }
         if (!this.name) {
@@ -143,18 +160,18 @@ export default {
         } else {
             this.nameError = ''
         }
-        if (!this.idCard) {
+        if (!this.idenNum) {
             this.idError = '请填写身份证信息'
         } else {
             this.idError = ''
         }
-        if (!this.mobile) {
-            this.mobileError = '请填写手机号码'
+        if (!this.phone) {
+            this.phoneError = '请填写手机号码'
         } else {
             if (/^1[3456789]\d{9}$/.test(this.mobile)) {
-                this.mobileError = ''
+                this.phoneError = ''
             } else {
-                this.mobileError = '请输入正确的手机号码'
+                this.phoneError = '请输入正确的手机号码'
             }
         }
         if (!this.province) {
@@ -167,7 +184,7 @@ export default {
         } else {
             this.addressError = ''
         }
-        if (!this.name || !this.idCard || !this.mobile || !this.province || !this.address || /^1[3456789]\d{9}$/.test(this.mobile) == false || !this.province || !this.address) return
+        if (!this.name || !this.idenNum || !this.phone || !this.province || !this.address || /^1[3456789]\d{9}$/.test(this.phone) == false || !this.province || !this.address) return
         this.$emit('next', data)
     },
     blur (e) {
@@ -180,21 +197,21 @@ export default {
                     this.nameError = ''
                 }
                 break;
-            case "idCard":
-                if (!this.idCard) {
+            case "idenNum":
+                if (!this.idenNum) {
                     this.idError = '请填写身份证信息'
                 } else {
                     this.idError = ''
                 }
                 break;
-            case "mobile":
-                if (!this.mobile) {
-                    this.mobileError = '请填写手机号码'
+            case "phone":
+                if (!this.phone) {
+                    this.phoneError = '请填写手机号码'
                 } else {
                     if (/^1[3456789]\d{9}$/.test(this.mobile)) {
-                        this.mobileError = ''
+                        this.phoneError = ''
                     } else {
-                        this.mobileError = '请输入正确的手机号码'
+                        this.phoneError = '请输入正确的手机号码'
                     }
                 }
                 break;

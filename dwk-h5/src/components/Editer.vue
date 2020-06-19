@@ -16,6 +16,9 @@ export default {
     data: () => ({
         step: 0,
     }),
+    mounted () {
+        console.log(this.$parent)
+    },
     components: {
         Progress,
         FirstStep,
