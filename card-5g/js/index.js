@@ -38,7 +38,7 @@ var CodeModal = {
                         <input placeholder="请输入验证码" v-model="code" />
                         <button :disabled="time > -1" @click="doubleGetCode">重新获取<span v-show="time > 0">({{time}})</span></button>
                     </div>
-                    <div class="intro">
+                    <div class="intro" style="padding-bottom: 0;">
                         <van-checkbox v-model="checked" shape="square" checked-color="#E8D0A4">
                             <span>我已阅读并同意</span>    
                             <span class="color-main" @click.stop="lookRule">《活动规则》</span>
@@ -146,6 +146,10 @@ var app = new Vue({
         checkMobile () {
             if (!this.mobile) {
                 vant.Toast({icon: "warning-o", message: '请输入办理号码'})
+                return
+            } 
+            if (/^1[3456789]\d{9}$/.test(this.mobile) == false) {
+                vant.Toast({icon: "warning-o", message: '请输入正确的号码'})
                 return
             }
             this.showProject = true
