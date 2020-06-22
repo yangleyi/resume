@@ -38,6 +38,14 @@
                 @click="showArea = true"
                 />
           </div>
+          <div class="row">
+              <label>详细地址</label>
+              <input
+                v-model="address"
+                data-name="address"
+                placeholder="请输入详细地址"
+                />
+          </div>
             <van-popup v-model="showArea" position="bottom">
                 <van-area
                     :area-list="areaList"

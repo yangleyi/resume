@@ -49,6 +49,8 @@
             v-model="address"
             placeholder="街道/镇村/小区/写字楼+门牌号"
             :error-message="addressError"
+            data-name="address"
+            @blur="blur"
         />
     </van-cell-group>
     <van-popup v-model="showArea" position="bottom">
@@ -110,7 +112,7 @@ export default {
   },
   mounted () {
       axios
-        .get('/getArea')
+        .get('/pyjgLog/scard/getArea')
         .then(res => {
             let proData = res.data.data
             proData.forEach(pro => {
@@ -136,6 +138,7 @@ export default {
           this.showArea = false
           let a = this.$refs.picker.getColumnValues()
           console.log('area', e, a)
+          this.areaError = ""
           this.province = e[0]
           this.city = e[1]
           this.area = e[2]
@@ -168,7 +171,7 @@ export default {
         if (!this.phone) {
             this.phoneError = '请填写手机号码'
         } else {
-            if (/^1[3456789]\d{9}$/.test(this.mobile)) {
+            if (/^1[3456789]\d{9}$/.test(this.phone)) {
                 this.phoneError = ''
             } else {
                 this.phoneError = '请输入正确的手机号码'
@@ -185,7 +188,26 @@ export default {
             this.addressError = ''
         }
         if (!this.name || !this.idenNum || !this.phone || !this.province || !this.address || /^1[3456789]\d{9}$/.test(this.phone) == false || !this.province || !this.address) return
-        this.$emit('next', data)
+        console.log('>>>>step1', data)
+        axios.post('/pyjgLog/scard/reservation', {
+            channel_code: "yk",
+            combo_id: 2697,
+            channel_id: 3110,
+            ad_id: 3110,
+            contact_person: data.name,
+            contact_tel: data.phone,
+            contact_addr: data.address,
+            name: data.name,
+            iden_num: data.idenNum,
+            province: data.province,
+            city: data.city,
+            area: data.area
+        }).then(res => {
+
+        }).catch(err => {
+            
+        })
+        // this.$emit('next', data)
     },
     blur (e) {
         let name = e.target.dataset.name
@@ -208,13 +230,19 @@ export default {
                 if (!this.phone) {
                     this.phoneError = '请填写手机号码'
                 } else {
-                    if (/^1[3456789]\d{9}$/.test(this.mobile)) {
+                    if (/^1[3456789]\d{9}$/.test(this.phone)) {
                         this.phoneError = ''
                     } else {
                         this.phoneError = '请输入正确的手机号码'
                     }
                 }
                 break;
+            case "address":
+                if (!this.address) {
+                    this.addressError = '请填写详细地址'
+                } else {
+                    this.addressError = ''
+                }
         }
     }
         

@@ -10,14 +10,30 @@ module.exports = {
         hotOnly: false, //是否开启热更新
         // proxy: "https://log.szpyjg.com"
         proxy: {        
-            '/getArea': {    //将www.example.com映射为/apis
-                target: 'https://log.szpyjg.com/pyjgLog/scard',  // 接口域名
+            '/pyjgLog/scard/getArea': {    //将www.example.com映射为/apis
+                target: 'https://log.szpyjg.com',  // 接口域名
                 secure: true,  // 如果是https接口，需要配置这个参数
                 changeOrigin: true,  //是否跨域
                 pathRewrite: {
                     '^getArea': ''   //需要rewrite的,
                 }       
-            }
+            },
+            '/pyjgLog/scard/reservation': {    //将www.example.com映射为/apis
+                target: 'https://log.szpyjg.com',  // 接口域名
+                secure: true,  // 如果是https接口，需要配置这个参数
+                changeOrigin: true,  //是否跨域
+                pathRewrite: {
+                    '^reservation': ''   //需要rewrite的,
+                }       
+            },
+            '/pyjgLog/scard/saveUser': {    //将www.example.com映射为/apis
+                target: 'https://log.szpyjg.com',  // 接口域名
+                secure: true,  // 如果是https接口，需要配置这个参数
+                changeOrigin: true,  //是否跨域
+                pathRewrite: {
+                    '^saveUser': ''   //需要rewrite的,
+                }       
+            },
         }
     }
 }
