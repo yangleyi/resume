@@ -1,3 +1,32 @@
+var Contact = {
+    props: ['show'],
+    methods: {
+        closeContactModal (agree) {
+            this.$emit('closecontact', {agree: agree === true ? agree : false})
+        }
+    },
+    template: `
+    <van-popup v-model="show" :close-on-click-overlay="false">
+        <div class="mobile-modal contact-box">
+            <div class="contact">
+                <p>1、生效规则 <br>
+                本套餐为电信星卡（升级版）；用户激活后立即生效。首月执行过渡期资费，订购当月套餐月基本费按日计扣（入网当日到月底），费用四舍五入到分；本套餐内国内通用流量6GB，100分钟通话。<br>
+                2、定向流量、专属权益规则<br>
+                2.1 每月可获得200G专属APP流量，订购立即生效。<br>
+                2.2专属APP流量包所含流量为国内流量，限在中国大陆境内（不含港澳台地区）使用，不含WLAN（Wi-Fi）上网。该流量的计费层级高于所有流量产品，包括主套餐、各种其他流量包和流量卡，即使用该专属流量时，无条件优先使用此专属流量包内流量，该流量不纳入原套餐流量断网阈值计算范围。同时专属流量包不适用于流量不清零规则。<br>
+                2.3、免流APP使用说明：<br>
+                （1）所有APP均需要升级到最新版本才能享受免流服务。<br>
+                （2）所有APP免费专属流量不包括以下使用范围：<br>
+                在无线上网卡、移动WIFI、平板电脑（如ipad）等设备使用时；将手机号码作为手机热点使用时；使用网络加速器、代理服务费、VPN等工具时；在中国香港、中国台湾、中国澳门及国际地区使用时APP内开机广告及第三方广告、图片、网页视频等产生的流量；APP中访问外部链接或转发到外部应用产生的流量；APP内直播业务不免流。<br>
+                （3）更多免流APP及免流使用说明请到电信营业厅咨询详情。<br></p>
+            </div>
+            <div class="contact-foot">
+                <button class="close" @click="closeContactModal">关闭</button>
+                <button class="agree" @click="closeContactModal(true)">同意</button>
+            </div>
+        </div>
+    </van-popup>`
+}
 var FirstStep = {
     data: function () {
         return {
@@ -14,10 +43,12 @@ var FirstStep = {
           addressError: "",
           showArea: false,
     
-          province: "", // 省
+          province: "啊", // 省
           city: "", // 市
           area: "", // 区
     
+          checked: true,
+          showContact: false,
           areaList: [],
           params: {
             channel_code: "yk",
@@ -28,21 +59,21 @@ var FirstStep = {
         }
     },
     mounted () {
-        axios
-            .get('/pyjgLog/scard/getArea')
-            .then(res => {
-                let proData = res.data.data
-                proData.forEach(pro => {
-                    pro.children = pro.childlist
-                    pro.childlist.forEach(city => {
-                        city.children = city.childlist
-                    })
-                })
-                this.areaList = proData
-                console.log(this.$data)
-            }).catch(err => {
-                console.log('XXX', err)
-            })
+        // axios
+        //     .get('/pyjgLog/scard/getArea')
+        //     .then(res => {
+        //         let proData = res.data.data
+        //         proData.forEach(pro => {
+        //             pro.children = pro.childlist
+        //             pro.childlist.forEach(city => {
+        //                 city.children = city.childlist
+        //             })
+        //         })
+        //         this.areaList = proData
+        //         console.log(this.$data)
+        //     }).catch(err => {
+        //         console.log('XXX', err)
+        //     })
     },
     computed: {
         showAreaText: function () {
@@ -51,6 +82,17 @@ var FirstStep = {
         }
     },
     methods: {
+        lookContract () {
+            this.showContact = true
+        },
+        closeContactEvent (agree) {
+            this.showContact = false
+            if (!this.checked) {
+                if (agree.agree) {
+                    this.checked = true
+                }
+            }
+        },
         areaConfirm (e) {
             this.showArea = false
             let a = this.$refs.picker.getColumnValues()
@@ -101,24 +143,24 @@ var FirstStep = {
             }
             if (!this.name || !this.idenNum || !this.phone || !this.province || !this.address || /^1[3456789]\d{9}$/.test(this.phone) == false || !this.province || !this.address) return
             console.log('>>>>step1', data)
-            axios.post('/pyjgLog/scard/reservation', {
-                channel_code: "yk",
-                combo_id: 2697,
-                channel_id: 3110,
-                ad_id: 3110,
-                contact_person: data.name,
-                contact_tel: data.phone,
-                contact_addr: data.address,
-                name: data.name,
-                iden_num: data.idenNum,
-                province: data.province,
-                city: data.city,
-                area: data.area
-            }).then(res => {
+            // axios.post('/pyjgLog/scard/reservation', {
+            //     channel_code: "yk",
+            //     combo_id: 2697,
+            //     channel_id: 3110,
+            //     ad_id: 3110,
+            //     contact_person: data.name,
+            //     contact_tel: data.phone,
+            //     contact_addr: data.address,
+            //     name: data.name,
+            //     iden_num: data.idenNum,
+            //     province: data.province,
+            //     city: data.city,
+            //     area: data.area
+            // }).then(res => {
     
-            }).catch(err => {
+            // }).catch(err => {
                 
-            })
+            // })
             // this.$emit('next', data)
         },
         blur (e) {
@@ -158,12 +200,14 @@ var FirstStep = {
             }
         }        
     },
+    components: {Contact},
     template: `
     <div>
-        <div class="title row m-2t m-2b">
+        <!--<div class="title row m-2t m-2b">
             <h1>你已选择<span>“电信星卡”</span></h1>
             <p>根据国家实名制要求，请提供正确的身份证信息</p>
-        </div>
+        </div>-->
+        <div style="font-size: 25px;font-weight:900;text-align:center;padding: 20px 0;">领取人信息</div>
         <van-cell-group>
             <van-field
                 v-model="name"
@@ -229,14 +273,17 @@ var FirstStep = {
                 @cancel="showArea = false"
             />
         </van-popup>
+        <van-checkbox checked-color="#ff8f6d" style="align-items:flex-start;font-size: 12px;color: #808080;padding-left: 10px;margin-top: 10px;" v-model="checked">我已认真阅读并同意<span class="text-warn" @click.stop="lookContract">《电信星卡业务规则》</span></van-checkbox>
         <div class="row m-2t">
-            <van-button round type="info" size="normal" block @click="next">下一步</van-button>
+            <van-button round type="info" size="normal" color="linear-gradient(to right, #ff5980 0%, #ff8f6d 100%)" block @click="next">0元包邮领取</van-button>
         </div>
         <div class="intro-msg">
-            <span>请保持联系电话畅通，我们可能随时联系您，本次为阶段性优惠活动，数量有限，联系号码无本人接听或恶意下单情况，将不予发货。</span>
+        <!--<span>请保持联系电话畅通，我们可能随时联系您，本次为阶段性优惠活动，数量有限，联系号码无本人接听或恶意下单情况，将不予发货。</span>-->
         </div>
+        <Contact :show="showContact" @closecontact="closeContactEvent" />
     </div>`
 }
+
 
 var SecondStep = {
     data: () => ({
@@ -273,6 +320,7 @@ var SecondStep = {
             this.showArea = false
         },
         lookContract () {
+            console.log('....')
             this.showContact = true
         },
         next () {
@@ -349,40 +397,52 @@ var ThirdStep = {
     `
 }
 
-var Contact = {
-    props: ['show'],
-    methods: {
-        closeContactModal (agree) {
-            this.$emit('closecontact', {agree: agree === true ? agree : false})
+var Progress = {
+    props: ["steps"],
+    template: `
+    <div class="progress">
+        <van-steps :active="steps" active-color="#0000ff">
+            <van-step></van-step>
+            <van-step></van-step>
+            <van-step></van-step>
+        </van-steps>
+    </div>`
+}
+var app = new Vue({
+    el: '#app',
+    data: () => ({
+        uuid: "",
+        step: 0
+    }),
+    mounted () {
+        let path = window.location.href.split('?')
+        if (path.length > 1) {
+            this.uuid = path[1].split('=')[1]
+            if (!this.uuid) {
+                this.uuid =  'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+                    return v.toString(16);
+                })
+            }
         }
     },
+    components: {
+        Progress,
+        FirstStep,
+        SecondStep,
+        ThirdStep
+    },
+    methods: {
+        nextEvent () {
+            this.stepIndex += 1
+            this.step += 1
+        },
+    },
     template: `
-    <van-popup v-model="show" :close-on-click-overlay="false">
-        <div class="mobile-modal contact-box">
-            <div class="contact">
-                <p>在使用河北移动和生活APP提供的各项服务之前，您应当认真阅读并遵守《河北移动和生活APP客户服务协议》（以下简称“本协议”），请您务必审慎阅读、充分理解各条款内容，特别是免除或者限制责任的条款、争议解决条款。免除或者限制责任的条款可能会以加粗字体显示，您应重点阅读。如您对协议有任何疑问，应向河北移动客服咨询。
-                当您按照登录页面提示填写信息、阅读并同意本协议且完成全部登录程序后，或您以其他河北移动和生活APP允许的方式实际使用河北移动和生活APP的服务时，即表示您已充分阅读、理解并接受本协议的全部内容，并与河北移动达成协议。您承诺接受并遵守本协议的约定，届时您不应以未阅读本协议的内容或者未获得河北移动对您问询的解答等理由，主张本协议无效，或要求撤销本协议。
-                一、协议的目的和范围
-                1.1 本协议由您与河北移动和生活APP的运营者共同订立。后者是指您的号码所归属的中国移动通信集团河北有限公司下属相应的地市分公司，在本协议中统称河北移动。
-                1.2 本协议包括协议正文、河北移动发布的各种官方信息、业务办理规则、法律声明、公告或通知等，以上文件构成本协议不可分割的组成部分，具有同等法律效力，且文件之间构成相互解释的关系，以下统称本协议。
-                1.3 河北移动和生活APP旨在向您提供代表河北移动的官方信息发布、服务信息查询、业务办理服务，并具备一定的网络交易平台功能。除非另行文件说明，河北移动和生活APP提供的以上所有的服务均受本协议约束，您在使用河北移动和生活APP提供的任一服务时，即表示您接受本协议所有条款。
-                1.4 河北移动有权根据需要不时地修改本协议的各个组成文件的内容，或新增部分内容，而无需另行单独通知您。变更后的协议一经在网站公布，立即或在文件明确的特定时间生效。您通过河北移动和生活APP接受服务的行为受您接受服务当时的协议内容约束。本协议是对双方权利义务的原则性约定，您如通过河北移动和生活APP或营业厅前台等方式办理各项业务时，还应当遵守办理业务时的具体约定和条款，并以办理时的各项约定为准。如河北移动发布的各种官方信息、业务办理规则、法律声明、公告或通知与实际办理业务时的内容不符或不一致，您应当明确咨询和询问，并以实际办理业务时的各项约定和业务办理规则为准。
-                二、主体资格、账号密码和用户信息
-                • 主体资格
-                2.1 您确认，在您进行登录或以其他河北移动和生活APP允许的方式实际使用河北移动和生活APP的服务时，您应当是具备完全民事行为能力的自然人、法人或其他组织。若您不具备前述主体资格，则您及您的监护人应承担因此而导致的一切后果，且河北移动和生活APP有权注销或永久冻结您的账户，并向您及您的监护人索偿相应损失。
-                • 账号和密码
-                2.2 您在河北移动和生活APP上的账号和密码是您重要的个人资料，为保障您个人资料信息安全，需要通过服务密码正确验证进行访问，您需记住本身的服务密码，务必注意账号和密码的保密
-                2.3 河北移动和生活APP向您提供多种登录方式，包括但不限于手机号码直接登录、凭动态密码登录、凭服务密码登录、凭服务密码+动态密码登录这四类基本登录方式。在使用部分平台时，如河北移动网上商城等，您也可以另行注册用户信息，设置用户名和密码，并使用该用户名和密码登录
-                2.4 您应按照机密的原则设置和保管自设密码，避免使用姓名、生日、电话号码等与本人明显相关的信息或过于简单的数字组合（如12345678、6个6、8个8等）作为密码，不应将本人自设密码提供给法律规定必须提供之外的任何人。
-                2.5河北移动和生活APP会提供便捷的业务办理和服务功能，您首次登录后会默认记住登录状态，如您不更换终端或注销账户，后续使用等同于已经通过本机本账户登录验证。
-                2.6 您应采取合理措施，防止本人密码被窃取，防范他人擅用您终端（包括但不限于手机），由于密码泄露或他人擅用造成的后果由您自行承担。
-                2.7 凡通过账号和密码登录河北移动和生活APP办理的一切业务，均视为您亲自办理的业务，您须对在该用户名和密码下发生的所有活动（包括但不限于发布信息、查询信息、点击同意或提交、网上订立协议、网上购买商品或服务等）承担责任。
-                2.8 河北移动和生活APP有相应的安全措施来保障您的交易安全，但河北移动不保证其绝对安全。</p>
-            </div>
-            <div class="contact-foot">
-                <button class="close" @click="closeContactModal">关闭</button>
-                <button class="agree" @click="closeContactModal(true)">同意</button>
-            </div>
-        </div>
-    </van-popup>`
-}
+    <div>
+        <!--<Progress :steps="step" />-->
+        <FirstStep v-if="step == 0" @next="nextEvent" />
+        <SecondStep v-if="step == 1" @next="nextEvent" />
+        <ThirdStep v-if="step == 2" />
+    </div>`
+})

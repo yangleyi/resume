@@ -65,6 +65,7 @@ h1 span {font-size: 22px;color: #0307f3;}
     font-size: 12px;
 }
 .text-blue {color: rgba(60, 87, 240, 0.918);}
+.text-warn {color: #ff8f6d}
 
 .mobile-modal {
     width: 70vw;
@@ -138,4 +139,7 @@ h1 span {font-size: 22px;color: #0307f3;}
     border: none;
     background: #fff;
 }
-.contact-foot .agree {background: #0307f3;color: #fff;}
+.contact-foot .agree {
+    background: linear-gradient(to right, #ff5980 0%, #ff8f6d 100%);
+    color: #fff;
+}

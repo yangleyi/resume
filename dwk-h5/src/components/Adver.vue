@@ -2,7 +2,7 @@
     <div class="ad-page">
         <div class="ad">
             <img src="./../assets/telstar1.png" />
-            <split-modal />
+            <!-- <split-modal /> -->
             <img src="./../assets/telstar2.png" />
         </div>
         <div class="ad-btn">

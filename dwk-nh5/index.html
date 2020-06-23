@@ -4,35 +4,309 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>星卡</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vant@2.8/lib/vant.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.8/lib/index.css" />
     <link rel="stylesheet" href="./assets/css/common.css">
+    <style>
+        .row {
+            font-size: 14px;
+            color: #fff;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .row label {
+            width: 6em;
+        }
+        .row input,
+        .row .input {
+            flex-grow: 1;
+            padding: 10px;
+            border-radius: 5px;
+            background: #fff;
+            outline: none;
+            border: 1px solid #9A81FF;
+            color: #301896;
+        }
+        .row input::-webkit-input-placeholder{
+            color: #301896;
+        }
+        .row .select-box {
+            flex-grow: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .select {
+            width: 32%;
+            text-align: center;
+            background: #ffffff;
+            border: none;
+            padding: 10px 0;
+            border-radius: 5px;
+            color: #301896;
+        }
+    .bg {
+        background: #150B59;
+    }
+    .box {
+        width: calc(100% - 20px);
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 10px;
+        overflow: hidden;
+        padding: 10px;
+        box-sizing: border-box;
+        background: url('./assets/xk3.png') no-repeat;
+    }
+    .van-cell-group {background: transparent!important}
+    .van-cell {background: transparent!important;color: #fff;}
+    .van-cell .van-field__control input {
+        color: #fff!important;
+    }
+    </style>
 </head>
 <body>
     <div id="app"></div>
 </body>
 </html>
-<!-- <script src="./js/index.js"></script> -->
+<script src="./lib/axios.min.js"></script>
 <script>
+    var Contact = {
+        props: ['show'],
+        methods: {
+            closeContactModal (agree) {
+                this.$emit('closecontact', {agree: agree === true ? agree : false})
+            }
+        },
+        template: `
+        <van-popup v-model="show" :close-on-click-overlay="false">
+            <div class="phone-modal contact-box">
+                <div class="contact">
+                    <p>1、生效规则 <br>
+                    本套餐为电信星卡（升级版）；用户激活后立即生效。首月执行过渡期资费，订购当月套餐月基本费按日计扣（入网当日到月底），费用四舍五入到分；本套餐内国内通用流量6GB，100分钟通话。<br>
+                    2、定向流量、专属权益规则<br>
+                    2.1 每月可获得200G专属APP流量，订购立即生效。<br>
+                    2.2专属APP流量包所含流量为国内流量，限在中国大陆境内（不含港澳台地区）使用，不含WLAN（Wi-Fi）上网。该流量的计费层级高于所有流量产品，包括主套餐、各种其他流量包和流量卡，即使用该专属流量时，无条件优先使用此专属流量包内流量，该流量不纳入原套餐流量断网阈值计算范围。同时专属流量包不适用于流量不清零规则。<br>
+                    2.3、免流APP使用说明：<br>
+                    （1）所有APP均需要升级到最新版本才能享受免流服务。<br>
+                    （2）所有APP免费专属流量不包括以下使用范围：<br>
+                    在无线上网卡、移动WIFI、平板电脑（如ipad）等设备使用时；将手机号码作为手机热点使用时；使用网络加速器、代理服务费、VPN等工具时；在中国香港、中国台湾、中国澳门及国际地区使用时APP内开机广告及第三方广告、图片、网页视频等产生的流量；APP中访问外部链接或转发到外部应用产生的流量；APP内直播业务不免流。<br>
+                    （3）更多免流APP及免流使用说明请到电信营业厅咨询详情。<br></p>
+                </div>
+                <div class="contact-foot">
+                    <button class="close" @click="closeContactModal">关闭</button>
+                    <button class="agree" @click="closeContactModal(true)">同意</button>
+                </div>
+            </div>
+        </van-popup>`
+    }
+    var SplitView = {
+        data: () => ({
+            name: "",
+            idenNum: "",
+            phone: "",
+            nameError: "",
+            idError: "",
+            phoneError: "",
+
+            area: "",
+            areaError: "",
+            address: "",
+            addressError: "",
+            showArea: false,
+
+            province: "", // 省
+            city: "", // 市
+            area: "", // 区
+
+            areaList: [],
+            params: {
+                channel_code: "yk",
+                combo_id: 2697,
+                channel_id: 3110,
+                ad_id: 3110
+            },
+            checked: true,
+            showContact: false,
+        }),
+        components: {Contact},
+        mounted () {
+            axios
+                .get('https://log.szpyjg.com/pyjgLog/scard/getArea')
+                .then(res => {
+                    let proData = res.data.data
+                    proData.forEach(pro => {
+                        pro.children = pro.childlist
+                        pro.childlist.forEach(city => {
+                            city.children = city.childlist
+                        })
+                    })
+                    this.areaList = proData
+                    console.log(this.$data)
+                }).catch(err => {})
+        },
+        methods: {
+            selectAreaClick () {
+                this.showArea = true
+                console.log('(******', this.$data)
+            },
+            lookContract () {
+                this.showContact = true
+            },
+            closeContactEvent (agree) {
+                this.showContact = false
+                if (!this.checked) {
+                    if (agree.agree) {
+                        this.checked = true
+                    }
+                }
+            },
+            areaConfirm (e) {
+                this.showArea = false
+                let a = this.$refs.picker.getColumnValues()
+                console.log('area', e, a)
+                this.areaError = ""
+                this.province = e[0]
+                this.city = e[1]
+                this.area = e[2]
+            },
+            confirm () {
+                let data = {
+                    name: this.name,
+                    card: this.idenNum,
+                    phone: this.phone,
+                    area: this.area,
+                    address: this.address
+                }
+                if (!this.name) {
+                    vant.Toast('请填写姓名')
+                    return
+                }
+                if (!this.idenNum) {
+                    vant.Toast('请填写身份证信息')
+                    return
+                }
+                if (!this.phone) {
+                    vant.Toast('请填写手机号码')
+                    return
+                } else {
+                    if (/^1[3456789]\d{9}$/.test(this.phone) == false) {
+                        vant.Toast('请输入正确的手机号码')
+                        return
+                    }
+                }
+                if (!this.area) {
+                    vant.Toast('请选择您的配送范围')
+                    return
+                }
+                if (!this.address) {
+                    vant.Toast('请填写详细地址')
+                    return
+                }
+                if (!this.name || !this.idenNum || !this.phone || !this.area || !this.address || /^1[3456789]\d{9}$/.test(this.phone) == false || !this.area || !this.address) return
+                console.log('********', data)
+                // this.$emit('next', data)
+            },
+        },
+        template: `
+        <div class="form bg">
+            <div class="box">
+                <div class="row">
+                    <label>姓名</label>
+                    <input 
+                        v-model="name"
+                        data-name="name"
+                        placeholder="请输入开卡人姓名"
+                        />
+                </div>
+                <div class="row">
+                    <label>办理身份证</label>
+                    <input 
+                        v-model="idenNum"
+                        data-name="idenNum"
+                        placeholder="请输入办理身份证"
+                        />
+                </div>
+                <div class="row">
+                    <label>联系号码</label>
+                    <input 
+                        v-model="phone"
+                        data-name="phone"
+                        placeholder="请输入联系号码"
+                        maxlength="11"
+                        />
+                </div>
+                <div class="row">
+                    <label>收货省市</label>
+                    <div class="input" @click="selectAreaClick">{{province ? province + city + area : '请选择地区'}}</div>
+                    <!--<input
+                        data-name=""
+                        placeholder="请选择地区"
+                        @click="selectAreaClick"
+                        disabled="true"
+                    />-->
+                </div>
+                <div class="row">
+                    <label>详细地址</label>
+                    <input
+                        v-model="address"
+                        data-name="address"
+                        placeholder="请输入详细地址"
+                        />
+                </div>
+                <van-popup v-model="showArea" position="bottom">
+                    <van-picker
+                        ref="picker"
+                        show-toolbar
+                        value-key="name"
+                        :columns="areaList" 
+                        @confirm="areaConfirm"
+                        @cancel="showArea = false"
+                    />
+                </van-popup>
+                <van-checkbox style="align-items:flex-start;font-size: 12px;padding-left: 10px;margin-top: 10px;" v-model="checked" shape="square">
+                    <span style="color: #fff">我已认真阅读并同意</span>
+                    <span style="color: #fff" @click.stop="lookContract">《电信星卡业务规则》</span>
+                </van-checkbox>
+                <div class="row m-2t">
+                    <van-button type="info" size="normal" block color="linear-gradient(to right, #ff5980 0%, #ff8f6d 100%)" @click="confirm">0元包邮领取</van-button>
+                </div>
+                <Contact :show="showContact" @closecontact="closeContactEvent" />
+            </div>
+        </div>`
+    }
     var app = new Vue({
         el: '#app',
+        data: {
+            uuid: "",
+            href: './edit.html'
+        },
+        mounted() {
+            this.uuid =  'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+                return v.toString(16);
+            })
+            this.href = this.href + '?code=' + this.uuid
+        },
         methods: {
             adClick () {}
         },
+        components: {SplitView},
         template: `
         <div class="ad-page">
             <div class="ad">
                 <img src="./assets/telstar1.png" />
-                <split-modal />
+                <SplitView />
                 <img src="./assets/telstar2.png" />
             </div>
             <div class="ad-btn">
-                <a href="./edit.html">咨询电话：400666666</a>
+                <!--<a :href="href">咨询电话：400666666</a>-->
             </div>
         </div>
         `
     })
-            // <van-button round block type="warning" text="咨询电话：400666666" @click="adClick" />
 </script>

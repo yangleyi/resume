@@ -70,11 +70,11 @@
         />
     </van-popup>
     <div class="row m-2t">
-        <van-button round type="info" size="normal" block @click="next">下一步</van-button>
+        <van-button round type="info" size="normal" block @click="next">领取星卡</van-button>
     </div>
-    <div class="intro-msg">
+    <!-- <div class="intro-msg">
         <span>请保持联系电话畅通，我们可能随时联系您，本次为阶段性优惠活动，数量有限，联系号码无本人接听或恶意下单情况，将不予发货。</span>
-    </div>
+    </div> -->
   </div>
 </template>
 
