@@ -427,22 +427,22 @@ var app = new Vue({
         }
     },
     components: {
-        Progress,
+        // Progress,
         FirstStep,
-        SecondStep,
-        ThirdStep
+        // SecondStep,
+        // ThirdStep
     },
     methods: {
         nextEvent () {
-            this.stepIndex += 1
-            this.step += 1
+            // this.stepIndex += 1
+            // this.step += 1
         },
     },
     template: `
     <div>
         <!--<Progress :steps="step" />-->
         <FirstStep v-if="step == 0" @next="nextEvent" />
-        <SecondStep v-if="step == 1" @next="nextEvent" />
-        <ThirdStep v-if="step == 2" />
+        <!--<SecondStep v-if="step == 1" @next="nextEvent" />
+        <ThirdStep v-if="step == 2" />-->
     </div>`
 })

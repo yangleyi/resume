@@ -31,7 +31,8 @@
             border: 1px solid #9A81FF;
             color: #301896;
         }
-        .row input::-webkit-input-placeholder{
+        .row input::-webkit-input-placeholder,
+        .row .input::-webkit-input-placeholder{
             color: #301896;
         }
         .row .select-box {
@@ -250,13 +251,14 @@
                         disabled="true"
                     />-->
                 </div>
-                <div class="row">
+                <div class="row" style="align-items: flex-start;">
                     <label>详细地址</label>
-                    <input
+                    <!--<input
                         v-model="address"
                         data-name="address"
                         placeholder="请输入详细地址"
-                        />
+                    />-->
+                    <textarea class="input" v-model="address" rows="3" cols="20" placeholder="请输入详细地址" data-name="address" />
                 </div>
                 <van-popup v-model="showArea" position="bottom">
                     <van-picker
