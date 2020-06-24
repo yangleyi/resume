@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, minimal-ui, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>星卡</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vant@2.8/lib/vant.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.8/lib/index.css" />
     <link rel="stylesheet" href="./assets/css/common.css">
-    <style>
+    <style type="text/css">
         .row {
             font-size: 14px;
             color: #fff;
@@ -120,7 +121,7 @@
             addressError: "",
             showArea: false,
 
-            province: "", // 省
+            province: "北京", // 省
             city: "", // 市
             area: "", // 区
 
@@ -177,11 +178,15 @@
             },
             confirm () {
                 let data = {
+                    ...this.params,
+                    contact_person: this.name,
+                    iden_num: this.idenNum,
+                    contact_tel: this.phone,
+                    province: this.province,
                     name: this.name,
-                    card: this.idenNum,
-                    phone: this.phone,
+                    city: this.city,
                     area: this.area,
-                    address: this.address
+                    contact_addr: this.address,
                 }
                 if (!this.name) {
                     vant.Toast('请填写姓名')
@@ -200,7 +205,7 @@
                         return
                     }
                 }
-                if (!this.area) {
+                if (!this.province) {
                     vant.Toast('请选择您的配送范围')
                     return
                 }
@@ -208,10 +213,38 @@
                     vant.Toast('请填写详细地址')
                     return
                 }
-                if (!this.name || !this.idenNum || !this.phone || !this.area || !this.address || /^1[3456789]\d{9}$/.test(this.phone) == false || !this.area || !this.address) return
-                console.log('********', data)
-                // this.$emit('next', data)
+                if (!this.name || !this.idenNum || !this.phone || !this.province || !this.address || /^1[3456789]\d{9}$/.test(this.phone) == false) return
+                console.log('********', data, this.$parent.uuid)
+                // this.checkMsg(data)
             },
+            // 校验身份
+            checkMsg (obj) {
+                axios.post('https://log.szpyjg.com/pyjgLog/scard/reservation', obj)
+                    .then(res => {
+
+                    }).catch(err => {
+
+                    })
+            },
+            // 保存用户信息
+            saveUser (obj) {
+                let params = {
+                    code: this.$parent.uuid,
+                    name: obj.name,
+                    phone: obj.contact_tel,
+                    idenNum: obj.iden_num,
+                    province: obj.province,
+                    city: obj.city,
+                    area: obj.area,
+                    contact_addr: obj.address
+                }
+                axios.post('https://log.szpyjg.com/pyjgLog/scard/saveUser', obj)
+                    .then(res => {
+
+                    }).catch(err => {
+
+                    })
+            }
         },
         template: `
         <div class="form bg">

@@ -142,7 +142,7 @@ var FirstStep = {
                 this.addressError = ''
             }
             if (!this.name || !this.idenNum || !this.phone || !this.province || !this.address || /^1[3456789]\d{9}$/.test(this.phone) == false || !this.province || !this.address) return
-            console.log('>>>>step1', data)
+            console.log('>>>>step1', data, this.$parent.uuid)
             // axios.post('/pyjgLog/scard/reservation', {
             //     channel_code: "yk",
             //     combo_id: 2697,
@@ -162,6 +162,25 @@ var FirstStep = {
                 
             // })
             // this.$emit('next', data)
+        },
+        // 保存用户信息
+        saveUser (obj) {
+            let params = {
+                // code: this.$parent.uuid,
+                // name: obj.name,
+                // phone: obj.contact_tel,
+                // idenNum: obj.iden_num,
+                // province: obj.province,
+                // city: obj.city,
+                // area: obj.area,
+                // contact_addr: obj.address
+            }
+            axios.post('https://log.szpyjg.com/pyjgLog/scard/saveUser', obj)
+                .then(res => {
+
+                }).catch(err => {
+
+                })
         },
         blur (e) {
             let name = e.target.dataset.name
@@ -284,130 +303,6 @@ var FirstStep = {
     </div>`
 }
 
-
-var SecondStep = {
-    data: () => ({
-        place: "上海 上海",
-        mobile: "13333333333",
-        showArea: false,
-        showMobile: false,
-        checked: false,
-        showContact: false,
-        areaList: {
-            province_list: {
-              110000: '北京市',
-              120000: '天津市'
-            },
-            city_list: {
-              110100: '北京市',
-              110200: '县',
-              120100: '天津市',
-              120200: '县'
-            }
-        }
-    }),
-    components: {
-        // MobileModal,
-        Contact
-    },
-    methods: {
-        closePopup (mobile) {
-            this.showMobile = false
-            if (!mobile) return
-            this.mobile = mobile.mobile
-        },
-        onConfirm () {
-            this.showArea = false
-        },
-        lookContract () {
-            console.log('....')
-            this.showContact = true
-        },
-        next () {
-            if (!this.checked) {
-                Toast('请勾选我同意协议！')
-                return
-            }
-            this.$emit('next')
-        },
-        closeContactEvent (agree) {
-            this.showContact = false
-            if (!this.checked) {
-                if (agree.agree) {
-                    this.checked = true
-                }
-            }
-        }
-    },
-    template: `
-    <div>
-        <div class="subtitle">请选择号码</div>
-        <van-cell-group>
-            <van-field
-                readonly
-                clickable
-                name="_d"
-                :value="place"
-                label="号码归属"
-                @click="showArea = true"
-                right-icon="arrow"
-                input-align="right"
-            />
-            <van-field
-                readonly
-                clickable
-                :value="mobile"
-                label="选择号码"
-                @click="showMobile = true"
-                input-align="right"
-                right-icon="arrow"
-            />
-        </van-cell-group>
-        <van-popup v-model="showArea" position="bottom">
-            <van-area
-                :area-list="areaList"
-                columns-num="2"
-                @confirm="onConfirm"
-                @cancel="showArea = false"
-            />
-        </van-popup>
-        <div class="contract">
-            <van-checkbox style="align-items:flex-start;" v-model="checked">我已同意并阅读<span class="text-blue" @click.stop="lookContract">《客户入网服务协议及业务协议》</span>、<span class="text-blue" @click.stop="lookContract">《关于信息收集使用规则公告》</span></van-checkbox>
-        </div>
-        <div class="row m-2t">
-            <van-button round type="info" size="normal" block @click="next">下一步</van-button>
-        </div>
-        <!--<MobileModal :showMobile="showMobile" @closemobilepopup="closePopup" />-->
-        <Contact :show="showContact" @closecontact="closeContactEvent" />
-    </div>`
-}
-
-var ThirdStep = {
-    template: `
-    <div>
-        <div class="success">
-            <van-icon name="passed" size="40px" color="#0000ff" />
-            <div class="msg">提交成功</div>
-            <div class="intro">
-                <div>王上，我们将尽快为您配送。</div>
-                <div>请在收到卡的<span class="text-blue">10天内激活使用</span>，过期将会被收回哦！</div>
-            </div>
-        </div>
-    </div>
-    `
-}
-
-var Progress = {
-    props: ["steps"],
-    template: `
-    <div class="progress">
-        <van-steps :active="steps" active-color="#0000ff">
-            <van-step></van-step>
-            <van-step></van-step>
-            <van-step></van-step>
-        </van-steps>
-    </div>`
-}
 var app = new Vue({
     el: '#app',
     data: () => ({
@@ -419,20 +314,22 @@ var app = new Vue({
         if (path.length > 1) {
             this.uuid = path[1].split('=')[1]
             if (!this.uuid) {
-                this.uuid =  'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                    var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-                    return v.toString(16);
-                })
+                this.setUUID()
             }
+        } else {
+            this.setUUID()
         }
     },
     components: {
-        // Progress,
         FirstStep,
-        // SecondStep,
-        // ThirdStep
     },
     methods: {
+        setUUID () {
+            this.uuid =  'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+                return v.toString(16);
+            })
+        },
         nextEvent () {
             // this.stepIndex += 1
             // this.step += 1
@@ -440,9 +337,6 @@ var app = new Vue({
     },
     template: `
     <div>
-        <!--<Progress :steps="step" />-->
         <FirstStep v-if="step == 0" @next="nextEvent" />
-        <!--<SecondStep v-if="step == 1" @next="nextEvent" />
-        <ThirdStep v-if="step == 2" />-->
     </div>`
 })

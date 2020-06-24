@@ -188,7 +188,7 @@ export default {
             this.addressError = ''
         }
         if (!this.name || !this.idenNum || !this.phone || !this.province || !this.address || /^1[3456789]\d{9}$/.test(this.phone) == false || !this.province || !this.address) return
-        console.log('>>>>step1', data)
+        console.log('>>>>step1', data, this.$parent.$parent.uuid)
         axios.post('/pyjgLog/scard/reservation', {
             channel_code: "yk",
             combo_id: 2697,
@@ -208,6 +208,18 @@ export default {
             
         })
         // this.$emit('next', data)
+    },
+    submit (obj) {
+        axios.post('/pyjgLog/scard/saveUser', {
+            code: this.$parent.$parent.uuid, // 生成的uuid
+            name: obj.name,
+            phone: obj.contact_tel,
+            idenNum: obj.iden_num,
+            province: obj.province,
+            city: obj.city,
+            area: obj.area,
+            address: obj.address
+        })
     },
     blur (e) {
         let name = e.target.dataset.name

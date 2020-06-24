@@ -11,16 +11,16 @@ $(function () {
     $('#checkbox').click(function (e) {
         let val = $(this).is(':checked')
         let type = e.type
-        dotRequest({value: val, type: type, html: this.outerHTML})
+        dotRequest({value: val, type: type, html: this.outerHTML, desc: '活动规则复选框'})
     })
     $('.main p span').click(function (e) {
         let type = e.type
-        dotRequest({type: type, html: this.outerHTML})
+        dotRequest({type: type, html: this.outerHTML, desc: "点击活动规则"})
     })
     // another
     $('.rule span').click(function (e) {
         let type = e.type
-        dotRequest({type: type, html: this.outerHTML})
+        dotRequest({type: type, html: this.outerHTML, desc: "点击活动规则"})
     })
     $('.main3 .iconfont.icon-guanbi1').click(function (e) {
         let type = e.type
@@ -45,7 +45,7 @@ $(function () {
     $('#telephone').blur(function (e) {
         let type = e.type
         let val = $(this).val()
-        dotRequest({value: val, html: this.outerHTML, desc: '手机号输入框'})
+        dotRequest({value: val, html: this.outerHTML, desc: '手机号输入框失去焦点'})
     })
     $('.main img').click(function (e) {
         let type = e.type
@@ -127,7 +127,6 @@ $(function () {
             out_source: GetQueryString('out_source'),
             source: 'zx'
         }
-
         dotRequest({value: JSON.stringify(obj), type: type, html: this.outerHTML, desc: '验证码弹窗-确定'})
     })
 })
