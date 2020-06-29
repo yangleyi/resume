@@ -1,9 +1,10 @@
 function dotRequest (obj) {
     let data = obj || {}
+    data.url = window.location.href
     $.ajax({
         url: 'https://log.szpyjg.com/pyjgLog/up25g/log',
         type: "POST",
-        data: {...obj},
+        data: {...data},
         success: function (result) {}
     })
 }
