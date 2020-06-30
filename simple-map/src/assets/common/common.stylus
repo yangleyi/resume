@@ -1,0 +1,24 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+ul, li {
+    list-style: none;
+}
+input {
+    font-size: .8rem;
+    color: #66686A;
+    border: 0px;
+    outline:none;
+    cursor: pointer;
+    width: 100%;
+}
+input::-webkit-input-placeholder {
+    /* placeholder颜色  */
+    color: #B8BCC0;
+    /* placeholder字体大小  */
+    font-size: .65rem;
+}
+button {
+    border: none;
+}

@@ -1,0 +1,52 @@
+.van-tab--active {
+    color: #009977 !important;
+}
+
+.van-tag {
+    margin-left 5px;
+    padding: 0 3px !important;
+}
+
+.van-cell {
+    padding 10px 5px !important;
+}
+
+.van-search {
+    background: #fff !important;
+}
+
+.van-search .van-cell {
+    border-radius: 6px !important;
+    padding: 5px !important;
+    background: #f2f2f2;
+}
+
+.van-search__action {
+    font-size: 15px;
+}
+
+.van-dialog__confirm {
+    // color: #FF5F00 !important;
+    color: #FF5F00;
+}
+
+.van-checkbox {
+    font-size: 15px;
+    padding: 10px;
+}
+
+.van-dialog__message {
+    p {
+        text-align: center;
+    }
+}
+
+.van-field__body {
+    input {
+        font-size 15px !important;
+    }
+}
+
+.van-hairline--surround::after {
+    border-width: 2px !important;
+}
