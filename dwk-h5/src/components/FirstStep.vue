@@ -80,6 +80,7 @@
 
 <script>
 import axios from 'axios';
+import $ from 'jquery';
 export default {
   name: 'FirstStep',
   data: function () {
@@ -111,8 +112,9 @@ export default {
     }
   },
   mounted () {
+      axios.defaults.headers.common["token"] = 'YJX1109';
       axios
-        .get('/pyjgLog/scard/getArea')
+        .get('/ad/area/getAll')
         .then(res => {
             let proData = res.data.data
             proData.forEach(pro => {
@@ -126,6 +128,21 @@ export default {
         }).catch(err => {
             console.log('XXX', err)
         })
+    //   axios
+    //     .get('/pyjgLog/scard/getArea')
+    //     .then(res => {
+    //         let proData = res.data.data
+    //         proData.forEach(pro => {
+    //             pro.children = pro.childlist
+    //             pro.childlist.forEach(city => {
+    //                 city.children = city.childlist
+    //             })
+    //         })
+    //         this.areaList = proData
+    //         console.log(this.$data)
+    //     }).catch(err => {
+    //         console.log('XXX', err)
+    //     })
   },
   computed: {
       showAreaText: function () {
@@ -189,24 +206,85 @@ export default {
         }
         if (!this.name || !this.idenNum || !this.phone || !this.province || !this.address || /^1[3456789]\d{9}$/.test(this.phone) == false || !this.province || !this.address) return
         console.log('>>>>step1', data, this.$parent.$parent.uuid)
-        axios.post('/pyjgLog/scard/reservation', {
-            channel_code: "yk",
-            combo_id: 2697,
-            channel_id: 3110,
-            ad_id: 3110,
-            contact_person: data.name,
-            contact_tel: data.phone,
-            contact_addr: data.address,
-            name: data.name,
-            iden_num: data.idenNum,
-            province: data.province,
-            city: data.city,
-            area: data.area
-        }).then(res => {
-
-        }).catch(err => {
-            
+        // vant.Toast.loading({
+        //     message: '请稍后...',
+        //     forbidClick: true,
+        //     loadingType: 'spinner',
+        // });
+        $.ajax({
+            url: '/ad/xingka/save',
+            data: {
+                provice: this.province,
+                city: this.city,
+                district: this.area,
+                address: this.address,
+                name: this.name,
+                mobile: this.phone,
+                idNo: this.idenNum,
+            },
+            type: "post",
+            headers: { 
+                'token': 'YJX1109',
+                'content-type': 'application/x-www-form-urlencoded' 
+                },
+            success  (res) {
+                console.log('....',res)
+            },
+            error (err) {
+                console.log('>>>>', err)
+            }
         })
+        return
+        axios({
+                    url: '/ad/xingka/save',
+                    data: {
+                        provice: this.province,
+                        city: this.city,
+                        district: this.area,
+                        address: this.address,
+                        name: this.name,
+                        mobile: this.phone,
+                        idNo: this.idenNum,
+                    },
+                    method: "post",
+                    headers: { 
+                        'token': 'YJX1109',
+                        'content-type': 'application/x-www-form-urlencoded' }
+                })
+            // .post('/ad/xingka/save', {
+                // provice: this.province,
+                // city: this.city,
+                // district: this.area,
+                // address: this.address,
+                // name: this.name,
+                // mobile: this.phone,
+                // idNo: this.idenNum,
+            // })
+            .then(res => {
+                // Toast.clear()
+                // Toast.success('成功文案');
+            }).catch(err => {
+                // Toast.clear()
+                // Toast.fail(err.message);
+            })
+        // axios.post('/pyjgLog/scard/reservation', {
+        //     channel_code: "yk",
+        //     combo_id: 2697,
+        //     channel_id: 3110,
+        //     ad_id: 3110,
+        //     contact_person: data.name,
+        //     contact_tel: data.phone,
+        //     contact_addr: data.address,
+        //     name: data.name,
+        //     iden_num: data.idenNum,
+        //     province: data.province,
+        //     city: data.city,
+        //     area: data.area
+        // }).then(res => {
+
+        // }).catch(err => {
+            
+        // })
         // this.$emit('next', data)
     },
     submit (obj) {

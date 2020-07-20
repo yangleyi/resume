@@ -4,12 +4,20 @@ module.exports = {
     lintOnSave: false, //是否开启eslint
     devServer: {
         open: false, //是否自动弹出浏览器页面
-        host: "192.168.31.57", 
+        host: "192.168.1.12", 
         port: '8081', 
         https: true,   //是否使用https协议
         hotOnly: false, //是否开启热更新
         // proxy: "https://log.szpyjg.com"
         proxy: {        
+            '/ad/area/getAll': {
+                target: 'https://fgh1.zkhcsoft.com/',
+                changeOrigin: true,  //是否跨域
+            },      
+            '/ad/xingka/save': {
+                target: 'https://fgh1.zkhcsoft.com/',
+                changeOrigin: true,  //是否跨域
+            },
             '/pyjgLog/scard/getArea': {    //将www.example.com映射为/apis
                 target: 'https://log.szpyjg.com',  // 接口域名
                 secure: true,  // 如果是https接口，需要配置这个参数
